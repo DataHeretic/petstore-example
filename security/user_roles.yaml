@@ -1,0 +1,26 @@
+---
+# This module is optional, and will be disregarded if this file isn't present.
+
+# The roles below are taken from the `User_Role` header, and are custom to this application.
+# Additionally, a `User_Id` header may be provided to uniquely identify the user. This may drive
+# the `resource_ownership_test` section of access-controlled resources, where the special `resource_owner`
+# role is used.
+#
+# It is _assumed_ that the headers are to be trusted! This requires a reverse-proxy upstream,
+# which will populate those headers, and remove them by default
+
+# A simple set to prevent typing-errors elsewhere
+roles: [anonymous, user, admin, store_owner]
+default_role: anonymous
+
+# a list of privilige escalation heirarchies.
+# roles to the right include the priviliges of the ones on the left.
+privilige_tree:
+  - anonymous <-- user        <-- admin
+  - anonymous <-- store_owner <-- admin
+
+# [optional] back-door to access resources using a role - set `Back_Door` header to this to log in
+# make sure you're using HTTPS with this one!
+back_door:
+  store_owner: Y_SFkljsfklLRFlksdfLRasdFSD32kl
+  admin: DSFkljsfklLRFlksdfLRasdFSD32kl

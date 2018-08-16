@@ -1,0 +1,38 @@
+---
+what: 
+  Selects a foo by ID
+
+GET: /foos/{id}
+RESULT: SINGLE_RECORD
+
+params:
+  declarations:
+    id: Int range [0,400000) # optional. conforms to math noration
+  
+# This endpoint is a GET, requiring the last query to be a SELECT and return a result-set
+query:
+  select top(1) from foo where id={id};
+
+# Record and test the expected behavior of the query
+# Useful to guard against regressions, and to serve as a living document
+tests:
+ -
+    it: shouldn't find results
+    given:
+      truncate foo;
+    when: 
+      id: 1
+    then: 
+      code: 404 # no results found
+  -
+    it: should find a record
+    given: |-
+      truncate foo;
+      insert into foo (id, name) values (1, 'blah'), (2, 'yolo');
+    when: 
+      id: 1
+    then: 
+      code: 200
+      results: |- # tabulated, tab-delimited format
+        id  name
+        1   blah

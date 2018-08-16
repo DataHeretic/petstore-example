@@ -1,0 +1,25 @@
+---
+what: 
+  Search foos by parameters
+
+GET: /foos?{color}{shape}
+RESULT: PAGINATED_LIST    # the PAGINATED_LIST listens for custom headers for:
+                          # page-number, per-page, sort-by-field, sort-order
+
+params:
+  declarations:
+    color: UTF8   length (1,16)
+    shape: ASCII  regex  ^(circle|square|[a-z]+gon)$ # circle, square, hexagon, pentagon,...
+  combinations: # boolean expression that specifies valid parameter combinations
+    (color) # here, `color` is mandatory, while `shape` isn't
+
+# a paginated list query provides (and necessitates) the use of:
+# {page_offset}, {per_page}, {sort_field}, {sort_order}
+query: |-
+  select top({per_page}) from foo 
+    where color={color}[(shape) and shape={shape}]  # will emit `expr` if `shape` is set
+    offset {page_offset}
+    sort by {sort_field} {sort_order};
+
+# Tests go here, if you'd like
+#tests: 

@@ -1,0 +1,16 @@
+---
+
+database: 
+  host: mydb.host.io
+  schema_name: petstore
+  port: 5432
+  username: ${PETSTORE_DB_USER} # ${...} correspond to env_var of same name
+  password: ${PETSTORE_DB_PASS}
+  type: postgresql
+  version: 15
+  connection_pool:
+    min: 10
+    max: 150
+    idle_ttl_seconds: 60 
+
+paralellism_factor: 4 # should correspond to available CPU cores
