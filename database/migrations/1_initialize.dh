@@ -1,7 +1,5 @@
--- file name should always conform to: `{incrementing number}_{descriptive title}.yaml`
--- each step wrapped in a transaction
-
-up: |-
+MIGRATION(1) initialize the database
+UP
   CREATE TABLE pet_types (
     id    int         auto_increment,
     name  varchar(32) not null
@@ -27,50 +25,47 @@ up: |-
     no return
   end proc1;
 
-down: |-
-  drop table currencies;
-  drop table currencies;
-  drop table currencies;
-  drop table currencies;
+DOWN
+  drop table pets;
+  drop table pet_types;
   drop function func1;
   drop procedure proc1;
 
 # for testing functions/procedures, but also constraints, and anything else
-tests:
--
-  it: should test the stored proc
-  given: |- # set up the data
+ENSURING
+> it should test the stored proc
+  given
     truncate foo;
     truncate bar;
     insert (a, b, c) into foo;
     insert (a, b, c) into bar;
 
   # call the tested procedure and return a data-set
-  when: |-
+  when
     call proc1(x);
     select * from foo;
   # validate the returned tab-delimited, tabulated data set
-  then: |-
+  then
     Col1  Col2  Col3
     A'    B'    c
     A2'   B2'   c
--
-  it: shold test the stored function
+
+> it shold test the stored function
   # stateless functions may not have a `given` block
   # OTOH, if `func1` relied on data, it should have been prepped
-  when: |-
-    select func1(y) as Res
-  then: |-
+  when
+    select func1('y') as Res
+  then
     Res
     Y'
--
-  it: should test unique constraint foo(a)
-  given: |-
+
+> it should test unique constraint foo(a)
+  given
     truncate foo;
     insert (a, b, c) into foo;
-  when:
+  when
     insert (a, d, e) into foo;
     select * from foo;
-  then:
+  then
     COL1  COL2  COL3
     a     b     c
