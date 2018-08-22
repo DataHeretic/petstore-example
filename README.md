@@ -1,7 +1,6 @@
 # DataHeretic Petstore Example
 
-### ★ Star me if you like me!
-#### _(it will help us know)_
+### ★ Star me if you like me _(help us gauge interest)_
 
 This project is meant to be a show-don't-tell exposition of what a DataHeretic project
 will look like in real life.
