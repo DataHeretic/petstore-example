@@ -1,0 +1,32 @@
+---
+what:
+  Add a new pet to the store
+
+POST: /pet
+BODY:
+  id:           integer($int64)
+  category:     {
+    id: integer($int64),
+    name: string
+  }
+  name:         string
+  photosUrls:   [string]
+  tags:         {
+    id: integer($int64),
+    name: string
+  }
+  status:       regex ^(available|pending|sold)$
+
+# The result of inserting the label 'pet' below
+RESULT: pet
+
+# The framework returns the result of the last insert statement, in this case our 'pet'
+# All inserts are part of the same transaction; boundaries can default to the whole of a 'label'
+pet: |-
+  insert into category (id, name) values ({id}, {name});
+  insert into tags (id, name) values ({id}, {name});
+  insert into pets (id, name, photos_urls, status) values ({id}, {name}, {photosUrls}, {status});
+
+#
+# Tests go here, if you'd like
+#tests:
