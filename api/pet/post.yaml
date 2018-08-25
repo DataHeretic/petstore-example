@@ -19,9 +19,11 @@ BODY
 
 # The framework returns the result of the last insert statement, in this case our 'pet'
 # All inserts are part of the same transaction; boundaries can default to the whole of a 'label'
-RETURNING SINGLE FROM
+FIRST
   upsert into category (id, name) values ({category.id}, {category.name});
   upsert into tags (id, name) values ({tags.id}, {tags.name});
+
+THEN RETURN RESULT FROM
   insert into pets (id, name, photos_urls, status) values ({id}, {name}, {photosUrls}, {status});
 
 ENSURING
