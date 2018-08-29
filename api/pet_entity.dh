@@ -1,0 +1,33 @@
+###################################################
+# Describes a CRUD Entity mapped to a table
+# Generates the following endpoints:
+#   - GET       /pet/{primary key}
+#   - GET LIST  /pet?{filter/search params}{pagination params} 
+#   - POST      /pet                    (create)
+#   - PUT       /pet                    (upsert)
+#   - PATCH     /pet                    (update)
+#   - DELETE    /pet
+#
+# Caching (if "ON") uses "pets" as the cache key
+# and caches results to /pets/{id},
+# invalidating the cache on PUT and DELETE to that {id}
+
+CRUD ENTITY /pets
+MAPS TO TABLE pets
+FIELDS
+    id          uint32      pk
+    category    uint32      fk(categories(id))
+    name        string      size [1,32]
+    photoUrls   [url]       mapsToField(photo_urls)     optional
+    tags        [string]    size [1,32]     fk(tags)    optional
+    status      string      regex ^(available|pending|sold)$
+
+CACHING IS ON
+
+AUTHORIZING
+    GET BY ID   to *
+    GET SEARCH  to *
+    PUT         to store_employee
+    POST        to store_employee
+    PATCH       to store_employee
+    DELETE      to store_owner
