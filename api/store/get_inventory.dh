@@ -1,0 +1,27 @@
+ENDPOINT gets the aggregated inventory
+GET LIST /store/inventory
+FROM
+    select status, count(status) as pets from pets group by status;
+
+ENSURING
+SETUP
+    BEFORE EACH
+        truncate pets;
+
+>   it should not find results when table is empty
+    then
+        code 404
+
+>   it should return expected results
+    given
+        insert into pets (name, status) values ('pet1', 'pending');
+        insert into pets (name, status) values ('pet2', 'available');
+        insert into pets (name, status) values ('pet3', 'sold');
+        insert into pets (name, status) values ('pet4', 'pending');
+    then
+        code 200
+        result
+            status      pets
+            pending     2
+            available   1
+            sold        1
