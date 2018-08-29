@@ -4,7 +4,6 @@ FROM
     select status, count(status) as pets from pets group by status;
 
 ENSURING
-SETUP
     BEFORE EACH
         truncate pets;
 
