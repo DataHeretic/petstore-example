@@ -4,14 +4,14 @@ FROM
     select status, count(status) as pets from pets group by status;
 
 ENSURING
-    BEFORE EACH
+    WITH CLEANUP
         truncate pets;
 
->   it should not find results when table is empty
+    it should not find results when table is empty
     then
         code 404
 
->   it should return expected results
+    it should return expected results
     given
         insert into pets (name, status) values ('pet1', 'pending');
         insert into pets (name, status) values ('pet2', 'available');
