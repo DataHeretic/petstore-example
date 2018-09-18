@@ -1,36 +1,20 @@
-MIGRATION initialize the database
+MIGRATION setting up some tables
 UP
   CREATE TABLE categories (
     id    serial      PRIMARY KEY,
     name  varchar(32) not null
   );
-
-  CREATE TYPE pet_status AS ENUM ('available', 'sold', 'pending');
-
-  CREATE TABLE pets (
-    id            serial          PRIMARY KEY,
-    category      integer         REFERENCES categories (id) NOT NULL,
-    name          varchar(32)     NOT NULL,
-    tags          varchar(32)[]   NOT NULL,
-    photo_urls    varchar(256)[]  NOT NULL,
-    status        pet_status      NOT NULL
-  );
-
-  CREATE TYPE order_status AS ENUM ('placed', 'approved', 'delivered');
-
-  CREATE TABLE orders (
-    id	      serial          PRIMARY KEY,
-    pet_id    integer         REFERENCES pets (id) NOT NULL,
-    quantity	integer         NOT NULL,
-    ship_date timestamp with time zone NOT NULL,
-    status	  order_status    NOT NULL,
-    complete	boolean         NOT NULL
-  );
-
 DOWN
   drop table categories;
-  drop table orders;
-  drop table pets;
-  drop type pet_status;
-  drop type order_status;
-  
+
+ENSURING
+  it should test our clever assumptions
+  given
+    this thing right there
+    and that one, too
+  when
+    i do this really clever thing
+  then
+    col1 col2  `col 3`
+    1    `2 3`  4
+    a    b      c
